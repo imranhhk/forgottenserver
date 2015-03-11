@@ -9,4 +9,4 @@ The Forgotten Server é um projeto criado por [marksamman](https://github.com/ma
 
 * [marksamman](https://github.com/marksamman) - TFS
 * [Bruno Minervino] (https://github.com/brunominervino) - Atualizações
-* [Projeto Orts] (https://github.com/orts) - Mapa
+* [Comedinha] (https://github.com/comedinha/) - Atualização dos bytes da versão 10.76

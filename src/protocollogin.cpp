@@ -190,5 +190,5 @@ void ProtocolLogin::onRecvFirstMessage(NetworkMessage& msg)
 
 #undef dispatchDisconnectClient
 
-	g_dispatcher.addTask(createTask(std::bind(&ProtocolLogin::getCharacterList, this, accountName, password)));
+	g_dispatcher.addTask(createTask(std::bind(&ProtocolLogin::getCharacterList, this, accountName, password, version)));
 }

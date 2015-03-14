@@ -322,7 +322,7 @@ void ProtocolGame::onRecvFirstMessage(NetworkMessage& msg)
 	std::stringstream account(sessionKey);
 	std::string segment;
 	std::vector<std::string> seglist;
-	while (std::getline(account, segment, '&')) {
+	while (std::getline(account, segment, '\n')) {
 		seglist.push_back(segment);
 	}
 	std::string accountName = seglist[0];
@@ -2481,15 +2481,9 @@ void ProtocolGame::sendAddCreature(const Creature* creature, const Position& pos
 	msg.AddDouble(Creature::speedB, 3);
 	msg.AddDouble(Creature::speedC, 3);
 
-	// can report bugs?
-	if (player->getAccountType() >= ACCOUNT_TYPE_TUTOR) {
-		msg.AddByte(0x01);
-	} else {
-		msg.AddByte(0x00);
-	}
-
-	msg.AddByte(0x00); // Can Change Pvp Framing
-	msg.AddByte(g_game.getWorldType() != WORLD_TYPE_PVP_ENFORCED ? 0x01 : 0x00);
+	msg.AddByte(player->getAccountType() >= ACCOUNT_TYPE_TUTOR ? 0x01 : 0x00); // can report bugs?
+	msg.AddByte(g_config.getBoolean(ConfigManager::CHANGE_PVP_FRAMES) ? 0x01 : 0x00); // can change pvp frames
+	msg.AddByte(g_game.getWorldType() != WORLD_TYPE_PVP_ENFORCED ? 0x01 : 0x00); // expert mode
 
 	writeToOutputBuffer(msg);
 

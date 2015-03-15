@@ -1086,7 +1086,7 @@ void Tile::removeThing(Thing* thing, uint32_t count)
 		const SpectatorVec& list = g_game.getSpectators(getPosition());
 		for (Creature* spectator : list) {
 			if (Player* tmpPlayer = spectator->getPlayer()) {
-				oldStackPosVector.push_back(getStackposOfThing(tmpPlayer, item));
+				oldStackPosVector.push_back(getStackposOfItem(tmpPlayer, item));
 			}
 		}
 
@@ -1112,7 +1112,7 @@ void Tile::removeThing(Thing* thing, uint32_t count)
 			const SpectatorVec& list = g_game.getSpectators(getPosition());
 			for (Creature* spectator : list) {
 				if (Player* tmpPlayer = spectator->getPlayer()) {
-					oldStackPosVector.push_back(getStackposOfThing(tmpPlayer, item));
+					oldStackPosVector.push_back(getStackposOfItem(tmpPlayer, item));
 				}
 			}
 
@@ -1233,11 +1233,11 @@ int32_t Tile::getStackposOfCreature(const Player* player, const Creature* creatu
 	return -1;
 }
 
-int32_t Tile::getStackposOfThing(const Player* player, const Thing* thing) const
+int32_t Tile::getStackposOfItem(const Player* player, const Item* item) const
 {
 	int32_t n = 0;
 	if (ground) {
-		if (ground == thing) {
+		if (ground == item) {
 			return n;
 		}
 		++n;
@@ -1245,8 +1245,7 @@ int32_t Tile::getStackposOfThing(const Player* player, const Thing* thing) const
 
 	const TileItemVector* items = getItemList();
 	if (items) {
-		const Item* item = thing->getItem();
-		if (item && item->isAlwaysOnTop()) {
+		if (item->isAlwaysOnTop()) {
 			for (ItemVector::const_iterator it = items->getBeginTopItem(); it != items->getEndTopItem(); ++it) {
 				if (*it == item) {
 					return n;
@@ -1263,10 +1262,8 @@ int32_t Tile::getStackposOfThing(const Player* player, const Thing* thing) const
 	}
 
 	if (const CreatureVector* creatures = getCreatures()) {
-		for (const Creature* creature : boost::adaptors::reverse(*creatures)) {
-			if (creature == thing) {
-				return n;
-			} else if (player->canSeeCreature(creature)) {
+		for (const Creature* creature : *creatures) {
+			if (player->canSeeCreature(creature)) {
 				if (++n >= 10) {
 					return -1;
 				}
@@ -1275,8 +1272,7 @@ int32_t Tile::getStackposOfThing(const Player* player, const Thing* thing) const
 	}
 
 	if (items) {
-		const Item* item = thing->getItem();
-		if (item && !item->isAlwaysOnTop()) {
+		if (!item->isAlwaysOnTop()) {
 			for (ItemVector::const_iterator it = items->getBeginDownItem(); it != items->getEndDownItem(); ++it) {
 				if (*it == item) {
 					return n;

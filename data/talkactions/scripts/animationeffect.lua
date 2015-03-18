@@ -1,9 +1,11 @@
 function onSay(player, words, param)
-	if not player:getGroup():getAccess() then
-		return true
-	end
-
 	local effect = tonumber(param)
+	local block = {43, 46, 47, 52}
+	
+	if not player:getGroup():getAccess() or effect == nil or isInArray(block, effect) or effect <= 0 or effect > 54 then
+		return false
+	end
+	
 	local orig = player:getPosition()
 	local d1, d2 = {z = orig.z}, {z = orig.z}
 
